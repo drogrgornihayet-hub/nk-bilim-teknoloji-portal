@@ -8,3 +8,685 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>NK BİLİM VE TEKNOLOJİ A.Ş.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --mustard:#E1AD01; --black:#000000; --white:#FFFFFF; --silver:#AAAAAA;
+      --red:#E53935; --gold:#F5C518;
+      --card-bg:#0a0a0a; --card-border:rgba(255,255,255,0.10); --card-hover:#141414;
+    }
+    html, body {
+      background:#E1AD01; color:var(--black);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+      min-height:100vh; overflow-x:hidden;
+    }
+    /* HEADER */
+    .site-header { position:sticky; top:0; z-index:500; background:#E1AD01; }
+    .header-top {
+      display:flex; align-items:center; justify-content:center;
+      position:relative; padding:20px 130px 14px;
+    }
+    .logo-nk { letter-spacing: -0.12em; font-weight: 900; }
+    .brand-primary {
+      font-size:clamp(15px,2.5vw,27px); font-weight:800; letter-spacing:0.09em;
+      color:var(--black); line-height:1.15; text-align:center;
+    }
+    .brand-slogan {
+      font-family: "Playfair Display", "Georgia", serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: #000000;
+      text-align: center;
+      margin-top: 18px;
+      line-height: 1.2;
+    }
+    .brand-center {
+      display:flex; flex-direction:column; align-items:center;
+    }
+    .lang-toggle {
+      position:absolute; right:24px; left:auto; top:50%; transform:translateY(-50%);
+      display:flex; align-items:center; gap:2px;
+      background:rgba(0,0,0,0.84); border:1px solid rgba(0,0,0,0.15);
+      border-radius:28px; padding:5px 12px;
+    }
+    .lang-btn {
+      background:none; border:none; color:rgba(255,255,255,0.42);
+      font-size:11px; font-weight:700; letter-spacing:0.14em; cursor:pointer;
+      padding:3px 8px; border-radius:16px; transition:color .2s,background .2s; font-family:inherit;
+    }
+    .lang-btn--active { color:#fff; background:rgba(255,255,255,0.14); }
+    .lang-btn:hover:not(.lang-btn--active) { color:rgba(255,255,255,0.75); }
+    .lang-sep { color:rgba(255,255,255,0.20); font-size:12px; user-select:none; padding:0 2px; }
+    /* NAV */
+    .nav-bar { display:flex; justify-content:center; border-top:1px solid rgba(0,0,0,0.10); }
+    .nav-item {
+      background:none; border:none; border-bottom:2px solid transparent;
+      color:var(--black); font-size:13px; font-weight:600; letter-spacing:0.06em;
+      cursor:pointer; padding:8px 32px;
+      transition:background .15s,border-bottom-color .2s; font-family:inherit;
+    }
+    .nav-item:hover { background:rgba(0,0,0,0.05); border-bottom-color:rgba(0,0,0,0.25); }
+    .nav-item.active { border-bottom-color:var(--black); background:rgba(0,0,0,0.04); }
+    /* PANELS */
+    .nav-panel { max-height:0; overflow:hidden; background:#111; transition:max-height 0.32s cubic-bezier(0.4,0,0.2,1); }
+    .nav-panel.open { max-height:420px; }
+    .nav-panel-inner { max-width:820px; margin:0 auto; padding:26px 32px 32px; }
+    .panel-label { font-size:10px; font-weight:700; letter-spacing:0.24em; color:rgba(255,255,255,0.32); text-transform:uppercase; margin-bottom:14px; }
+    .panel-body { font-size:15px; line-height:1.80; color:rgba(255,255,255,0.88); }
+    .branch-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+    .branch-card { display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); }
+    .branch-pin-icon { flex-shrink:0; width:20px; height:28px; }
+    .branch-name { font-size:14px; font-weight:700; letter-spacing:0.05em; color:var(--white); }
+    .branch-sub  { font-size:11px; color:rgba(255,255,255,0.42); margin-top:2px; }
+    .contact-row { display:flex; align-items:center; gap:16px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .contact-row:last-child { border-bottom:none; }
+    .contact-icon { font-size:20px; flex-shrink:0; width:28px; text-align:center; }
+    .contact-label { font-size:10px; font-weight:700; letter-spacing:0.14em; color:rgba(255,255,255,0.35); text-transform:uppercase; margin-bottom:3px; }
+    .contact-value { font-size:15px; color:var(--white); }
+    .header-shadow { height:1px; background:rgba(0,0,0,0.13); }
+    /* MAP SEPARATOR LINE */
+    .map-separator-line { height:1px; background:rgba(0,0,0,0.13); margin:10px 0 25px 0; border:none; }
+    /* LAYOUT */
+    .page-wrapper { max-width:1060px; margin:0 auto; padding:0 24px 72px; }
+    /* MAP */
+    .map-section { margin-top:-100px; margin-bottom:-55px; }
+    .map-wrapper { position:relative; max-width:880px; width:100%; margin:0 auto; }
+    .world-map-img { width:100%; height:auto; display:block; border-radius:8px; user-select:none; pointer-events:none; mix-blend-mode:multiply; }
+    .arcs-svg { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; overflow:visible; z-index:1; }
+    .arc-path { fill:none; stroke:var(--red); stroke-width:2; stroke-linecap:round; opacity:0.75; }
+    .map-overlay { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:5; }
+    .hub { position:absolute; transform:translate(-50%,-100%); display:flex; flex-direction:column; align-items:center; gap:3px; pointer-events:auto; }
+    .hub-pin { width:32px; height:auto; object-fit:contain; }
+    .hub-label { font-size:8px; font-weight:800; letter-spacing:0.16em; color:var(--white); text-shadow:0 0 8px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,1); white-space:nowrap; }
+    .hub--turkiye  { left:55.5%; top:48%; }
+    .hub--avrupa   { left:46.5%; top:39%; }
+    .hub--asya     { left:71%;   top:43%; }
+    .hub--amerika  { left:18%;   top:47%; }
+    /* PRODUCTS */
+    .section-divider { text-align:center; font-size:10px; font-weight:700; letter-spacing:0.26em; color:rgba(0,0,0,0.32); text-transform:uppercase; margin-top:0; margin-bottom:45px; }
+    .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(285px,1fr)); gap:20px; margin-top:0; margin-bottom:64px; align-items:stretch; }
+    .tech-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:28px 24px; transition:background .2s,border-color .2s,transform .2s; position:relative; overflow:hidden; display:flex; flex-direction:column; height:100%; }
+    .tech-card:hover { background:var(--card-hover); border-color:rgba(255,255,255,0.18); transform:translateY(-2px); }
+    .tech-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 60%); pointer-events:none; }
+    .card-badge { display:inline-block; font-size:9px; font-weight:700; letter-spacing:0.18em; padding:3px 10px; border-radius:20px; margin-bottom:14px; text-transform:uppercase; }
+    .badge-live    { background:rgba(76,175,80,0.18);  color:#66BB6A; border:1px solid rgba(76,175,80,0.3);   }
+    .badge-soon    { background:rgba(255,193,7,0.12);   color:#FFB300; border:1px solid rgba(255,193,7,0.25);  }
+    .badge-concept { background:rgba(156,39,176,0.14);  color:#CE93D8; border:1px solid rgba(156,39,176,0.28); }
+    .card-title    { font-size:20px; font-weight:700; color:var(--white); margin-bottom:6px; }
+    .card-subtitle { font-size:12px; color:var(--silver); letter-spacing:0.04em; margin-bottom:20px; line-height:1.6; }
+    /* THERMAL DETAILS */
+    .ta-panel { display:none; margin-bottom:18px; }
+    .ta-panel.show { display:block; }
+    .score-row { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+    .score-value { font-size:30px; font-weight:800; color:var(--gold); letter-spacing:-0.02em; }
+    .score-label { font-size:10px; color:var(--silver); letter-spacing:0.10em; line-height:1.5; text-transform:uppercase; }
+    .modules-list { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px; }
+    .module-tag { font-size:9px; font-weight:600; letter-spacing:0.10em; padding:4px 9px; border-radius:6px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.10); color:var(--silver); text-transform:uppercase; }
+    .ta-divider { height:1px; background:rgba(255,255,255,0.08); margin:14px 0; }
+    .ta-section-title { font-size:10px; font-weight:700; letter-spacing:0.18em; color:var(--silver); text-transform:uppercase; margin-bottom:10px; }
+    .calc-modules { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:14px; }
+    .calc-item { padding:8px 10px; border-radius:8px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); font-size:10px; color:var(--silver); letter-spacing:0.05em; display:flex; align-items:center; gap:6px; }
+    .calc-dot { width:5px; height:5px; background:var(--gold); border-radius:50%; flex-shrink:0; }
+    .standards-list { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
+    .std-tag { font-size:9px; font-weight:700; padding:3px 8px; border-radius:5px; background:rgba(245,197,24,0.10); border:1px solid rgba(245,197,24,0.25); color:var(--gold); letter-spacing:0.08em; }
+    .access-link { display:block; margin-top:14px; padding:11px; border-radius:10px; background:rgba(245,197,24,0.10); border:1px solid rgba(245,197,24,0.30); color:var(--gold); font-size:11px; font-weight:700; letter-spacing:0.10em; text-decoration:none; text-align:center; text-transform:uppercase; transition:background .2s; }
+    .access-link:hover { background:rgba(245,197,24,0.18); }
+    /* BUTTON */
+    .card-btn { display:block; width:100%; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.06); color:var(--white); font-size:12px; font-weight:600; letter-spacing:0.10em; cursor:pointer; transition:background .2s,border-color .2s; text-align:center; text-transform:uppercase; font-family:inherit; margin-top:auto !important; }
+    .card-btn:hover:not(:disabled) { background:rgba(255,255,255,0.10); border-color:rgba(255,255,255,0.25); }
+    .card-btn:disabled { cursor:default; }
+    .card-btn-red { background:rgba(229,57,53,0.15); border-color:rgba(229,57,53,0.40); color:#EF9A9A; }
+    .card-btn-red:hover:not(:disabled) { background:rgba(229,57,53,0.22); border-color:rgba(229,57,53,0.60); }
+    /* VIP MODAL */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); z-index:1000; align-items:center; justify-content:center; }
+    .modal-overlay.active { display:flex; }
+    .modal-box { background:#080808; border:1px solid rgba(255,255,255,0.12); border-radius:20px; padding:40px 36px; width:100%; max-width:420px; text-align:center; position:relative; }
+    .modal-close { position:absolute; top:16px; right:20px; background:none; border:none; color:var(--silver); font-size:22px; cursor:pointer; line-height:1; font-family:inherit; }
+    .modal-icon  { font-size:36px; margin-bottom:16px; }
+    .modal-title { font-size:18px; font-weight:700; color:var(--white); margin-bottom:6px; letter-spacing:0.02em; }
+    .modal-desc  { font-size:13px; color:var(--silver); margin-bottom:24px; line-height:1.65; }
+    .modal-input { width:100%; padding:14px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:var(--white); font-size:14px; font-family:"SF Mono","Fira Code","Courier New",monospace; letter-spacing:0.07em; outline:none; margin-bottom:12px; transition:border-color .2s; }
+    .modal-input:focus { border-color:rgba(229,57,53,0.65); }
+    .modal-input::placeholder { color:rgba(255,255,255,0.22); }
+    .modal-submit { width:100%; padding:13px; border-radius:10px; border:1px solid rgba(229,57,53,0.4); background:rgba(229,57,53,0.15); color:#EF9A9A; font-size:13px; font-weight:700; letter-spacing:0.13em; cursor:pointer; transition:background .2s; text-transform:uppercase; font-family:inherit; }
+    .modal-submit:hover { background:rgba(229,57,53,0.26); }
+    .modal-error  { font-size:12px; color:#EF5350; margin-top:10px; display:none; }
+    .welcome-badge { display:none; margin-top:14px; padding:9px 18px; border-radius:20px; background:rgba(76,175,80,0.14); border:1px solid rgba(76,175,80,0.3); color:#66BB6A; font-size:12px; font-weight:600; letter-spacing:0.08em; }
+    /* FOOTER */
+    .site-footer { text-align:center; padding-top:24px; border-top:1px solid rgba(0,0,0,0.13); }
+    .footer-text { font-size:11px; color:rgba(0,0,0,0.36); letter-spacing:0.09em; }
+    @media (max-width:680px) {
+      .header-top { padding:16px 90px 10px; } .lang-toggle { right:14px; left:auto; }
+      .nav-item { padding:10px 18px; font-size:12px; }
+      .page-wrapper { padding:0 16px 56px; }
+      .cards-grid { grid-template-columns:1fr; } .calc-modules { grid-template-columns:1fr; }
+      .branch-grid { grid-template-columns:1fr; } .modal-box { margin:16px; padding:32px 24px; }
+    }
+    /* ===== CUSTOM THEMED SCROLLBAR – Başkumandanlık Theme ===== */
+    /* Webkit (Chrome, Safari, Edge) */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #E1AD01; }
+    ::-webkit-scrollbar-thumb { background: #222222; border-radius: 5px; border: 2px solid #E1AD01; }
+    ::-webkit-scrollbar-thumb:hover { background: #000000; }
+    /* Firefox */
+    html { scrollbar-width: thin; scrollbar-color: #222222 #E1AD01; }
+
+    /* ===== LIVE CLOCK – Başkumandanlık Theme ===== */
+    .clock-display {
+      position: fixed !important;
+      top: 20px;
+      left: 24px;
+      right: auto;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      pointer-events: none;
+      user-select: none;
+      transform: translateZ(0);
+    }
+    .clock-sep { color: rgba(0,0,0,0.35); font-size: 11px; line-height: 1; flex-shrink: 0; }
+    .clock-date-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      color: #000000;
+      text-transform: uppercase;
+      font-family: -apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;
+      line-height: 1;
+      text-align: left;
+    }
+    .clock-date-icon { font-size: 11px; line-height: 1; flex-shrink: 0; }
+    .clock-time {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #000000;
+      font-variant-numeric: tabular-nums;
+      font-family: "SF Mono","Fira Code","Courier New",monospace;
+      line-height: 1;
+      margin-left: 22px;
+      text-align: left;
+    }
+    @media (max-width:680px) {
+      .clock-display { top:11px; left:10px; right:auto; }
+      .clock-time { font-size:11px; }
+      .clock-date-row { font-size:8px; }
+    }
+  </style>
+</head>
+<body>
+<!-- LIVE CLOCK -->
+<div id="liveClock" class="clock-display">
+  <div class="clock-date-row">
+    <span class="clock-date-icon">🗓️</span>
+    <span id="clockDate">&#8212;</span>
+  </div>
+  <div class="clock-time" id="clockTime">00:00:00</div>
+</div>
+<!-- HEADER -->
+<header class="site-header" id="siteHeader">
+  <div class="header-top">
+    <div class="brand-center">
+      <div class="brand-primary" id="brandPrimary"><span class="logo-nk">NK</span> BİLİM VE TEKNOLOJİ A.Ş.</div>
+      <div class="brand-slogan">Bilim ve Teknolojinin Kalbinin Attığı Yer</div>
+    </div>
+    <div class="lang-toggle" role="group">
+      <button class="lang-btn lang-btn--active" id="btnLangTR" onclick="setLang('TR')">TR</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" id="btnLangEN" onclick="setLang('EN')">EN</button>
+    </div>
+  </div>
+  <nav class="nav-bar">
+    <button class="nav-item" id="navAbout"   onclick="togglePanel('about')"   aria-expanded="false">Hakkımızda</button>
+    <button class="nav-item" id="navBranch"  onclick="togglePanel('branch')"  aria-expanded="false">Şubelerimiz</button>
+    <button class="nav-item" id="navProducts" onclick="togglePanel('products')" aria-expanded="false">Ürünlerimiz</button>
+    <button class="nav-item" id="navContact" onclick="togglePanel('contact')" aria-expanded="false">İletişim</button>
+  </nav>
+  <div class="nav-panel" id="panelAbout">
+    <div class="nav-panel-inner">
+      <div class="panel-label" id="panelAboutLabel">HAKKIMIZDA</div>
+      <div class="panel-body" id="panelAboutBody"><div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Kurucu ve CEO: Dr. Nihayet Koçyiğit</div><div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Kurulma Tarihi: 2026</div><div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Küresel çapta 4 ana stratejik şube ile faaliyet göstermekteyiz.</div></div>
+    </div>
+  </div>
+  <div class="nav-panel" id="panelBranch">
+    <div class="nav-panel-inner">
+      <div class="panel-label" id="panelBranchLabel">ŞUBELERİMİZ</div>
+      <div class="branch-grid" id="branchGrid"></div>
+    </div>
+  </div>
+  <div class="nav-panel" id="panelProducts">
+    <div class="nav-panel-inner">
+      <div class="panel-label" id="panelProductsLabel">ÜRÜNLERİMİZ</div>
+      <div class="panel-body"  id="panelProductsBody"><div style="margin-bottom:10px;">Teknoloji Portföyümüz:</div><div style="color:#E1AD01; font-weight:700; margin-bottom:6px;">&#x25CF; Thermal Academy (Aktif)</div><div style="color:#E1AD01; font-weight:700; margin-bottom:6px;">&#x25CF; Success AI (Yakında)</div><div style="color:#E1AD01; font-weight:700;">&#x25CF; Hayalet Savunma Sistemleri (Yakında)</div></div>
+    </div>
+  </div>
+  <div class="nav-panel" id="panelContact">
+    <div class="nav-panel-inner">
+      <div class="panel-label" id="panelContactLabel">İLETİŞİM</div>
+      <div class="contact-row">
+        <div class="contact-icon">&#x2709;&#xFE0F;</div>
+        <div>
+          <div class="contact-label" id="contactEmailLabel">E-POSTA</div>
+          <div class="contact-value">drogrgornihayet@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-icon">&#x1F4DE;</div>
+        <div>
+          <div class="contact-label" id="contactPhoneLabel">TELEFON</div>
+          <div class="contact-value" id="contactPhoneValue">+90 506 567 94 49</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="header-shadow"></div>
+</header>
+
+<main class="page-wrapper">
+  <!-- MAP -->
+  <section class="map-section">
+    <div class="map-wrapper" id="mapWrapper">
+      <img class="world-map-img"
+           src="https://customer-assets-agu9un31.emergentagent.net/wingman/122ce0f9-ef0f-42de-a66f-d34507dc7563/attachments/069baa441eef4367bad6a683dceb04c9_image.png"
+           alt="NK Global Network Map" draggable="false" />
+      <svg class="arcs-svg" id="arcsSvg" aria-hidden="true"></svg>
+      <div class="map-overlay">
+        <div class="hub hub--turkiye" id="hubTurkiye">
+          <img class="hub-pin" src="https://customer-assets-agu9un31.emergentagent.net/wingman/122ce0f9-ef0f-42de-a66f-d34507dc7563/attachments/22eaeb93a528400fb2e6caf9da61839d_image.png" alt="pin" />
+          <span class="hub-label" id="labelTurkiye">TÜRKİYE</span>
+        </div>
+        <div class="hub hub--avrupa" id="hubAvrupa">
+          <img class="hub-pin" src="https://customer-assets-agu9un31.emergentagent.net/wingman/122ce0f9-ef0f-42de-a66f-d34507dc7563/attachments/22eaeb93a528400fb2e6caf9da61839d_image.png" alt="pin" />
+          <span class="hub-label" id="labelAvrupa">AVRUPA</span>
+        </div>
+        <div class="hub hub--asya" id="hubAsya">
+          <img class="hub-pin" src="https://customer-assets-agu9un31.emergentagent.net/wingman/122ce0f9-ef0f-42de-a66f-d34507dc7563/attachments/22eaeb93a528400fb2e6caf9da61839d_image.png" alt="pin" />
+          <span class="hub-label" id="labelAsya">ASYA</span>
+        </div>
+        <div class="hub hub--amerika" id="hubAmerika">
+          <img class="hub-pin" src="https://customer-assets-agu9un31.emergentagent.net/wingman/122ce0f9-ef0f-42de-a66f-d34507dc7563/attachments/22eaeb93a528400fb2e6caf9da61839d_image.png" alt="pin" />
+          <span class="hub-label" id="labelAmerika">AMERİKA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="map-separator-line" aria-hidden="true" />
+
+  <!-- PRODUCTS -->
+  <p class="section-divider" id="sectionDivider">TEKNOLOJİ ÜRÜNLERİ</p>
+  <div class="cards-grid">
+
+    <div class="tech-card" id="cardThermal">
+      <span class="card-badge badge-live" id="card1Badge">Aktif</span>
+      <div class="card-title">Thermal Academy</div>
+      <div class="card-subtitle" id="card1Subtitle">AI Destekli Global İzolasyon Platformu<br>TS 825:2024 · ISO 6946 · ASTM C518 · DIN 4108</div>
+      <div class="ta-panel" id="taPanelCard">
+        <div class="score-row">
+          <div class="score-value">0.946</div>
+          <div class="score-label" id="card1ScoreLabel">AI PERFORMANS<br>ALTIN SKOR</div>
+        </div>
+        <div class="modules-list">
+          <span class="module-tag">U-Value</span><span class="module-tag">R-Value</span>
+          <span class="module-tag">&lambda; (Lambda)</span>
+          <span class="module-tag">TS 825:2024</span><span class="module-tag">ISO 6946</span>
+          <span class="module-tag">ASTM C518</span><span class="module-tag">DIN 4108</span>
+          <span class="module-tag">DIN 4102</span><span class="module-tag">TS EN 13163</span>
+          <span class="module-tag" id="moduleMALIYET">MALİYET</span>
+          <span class="module-tag" id="moduleFINANS">FİNANS</span>
+        </div>
+        <div class="ta-divider"></div>
+        <div class="ta-section-title" id="ta1CalcTitle">Hesaplama Modülleri</div>
+        <div class="calc-modules" id="ta1CalcGrid"></div>
+        <div class="ta-section-title" id="ta1StdTitle">Desteklenen Standartlar</div>
+        <div class="standards-list">
+          <span class="std-tag">TS 825:2024</span><span class="std-tag">ISO 6946</span>
+          <span class="std-tag">ASTM C518</span><span class="std-tag">DIN 4108</span>
+          <span class="std-tag">DIN 4102</span><span class="std-tag">TS EN 13163</span>
+        </div>
+        <a class="access-link" id="ta1AccessLink"
+           href="https://thermal-calc-pro.preview.emergentagent.com"
+           target="_blank" rel="noopener noreferrer">Thermal Academy'ye Giriş &#x2192;</a>
+      </div>
+      <button class="card-btn card-btn-red" id="btnThermal" onclick="openProductModal('thermal')">VIP Erişim</button>
+    </div>
+
+    <div class="tech-card">
+      <span class="card-badge badge-soon" id="card2Badge">Yakında</span>
+      <div class="card-title">Success AI</div>
+      <div class="card-subtitle" id="card2Subtitle">AI Destekli Akademik Asistan<br>Tez Yazımı · Literatür Taraıması · Sunum</div>
+      <div class="modules-list" id="card2Modules">
+        <span class="module-tag">Tez Yazımı</span><span class="module-tag">Literatür</span>
+        <span class="module-tag">Sunum AI</span><span class="module-tag">Akademik Analiz</span>
+      </div>
+      <button class="card-btn" id="btnSuccess" onclick="openProductModal('success')">VIP Erişim</button>
+    </div>
+
+    <div class="tech-card">
+      <span class="card-badge badge-concept" id="card3Badge">Yakında</span>
+      <div class="card-title">Hayalet Savunma Sistemleri</div>
+      <div class="card-subtitle" id="card3Subtitle">Termal Görünmezlik Teknolojisi<br>Savunma Sanayi · Stratejik Çözümler</div>
+      <div class="modules-list" id="card3Modules">
+        <span class="module-tag">Termal İmza</span><span class="module-tag">İR Görünmezlik</span>
+        <span class="module-tag">Savunma</span><span class="module-tag">Stratejik</span>
+      </div>
+      <button class="card-btn" id="btnShield" onclick="openProductModal('shield')">VIP Erişim</button>
+    </div>
+
+  </div>
+  <footer class="site-footer">
+    <p class="footer-text" id="footerText">&copy; 2026 NK BİLİM VE TEKNOLOJİ A.Ş. &mdash; TÜM HAKLAR SAKLIDIR</p>
+  </footer>
+</main>
+
+<!-- VIP MODAL -->
+<div class="modal-overlay" id="vipModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&#x00D7;</button>
+    <div class="modal-icon"   id="modalIcon">&#x1F510;</div>
+    <div class="modal-title"  id="modalTitle">VIP Erişim</div>
+    <div class="modal-desc"   id="modalDesc">VIP kodunuzu girin.</div>
+    <input class="modal-input" type="password" id="vipInput"
+           placeholder="VIP-XXXX-2026" autocomplete="off" spellcheck="false"
+           onkeydown="if(event.key==='Enter') submitVip()" />
+    <button class="modal-submit" id="modalSubmitBtn" onclick="submitVip()">ERİŞİMİ AÇ</button>
+    <div class="modal-error"   id="modalError"></div>
+    <div class="welcome-badge" id="welcomeBadge"></div>
+  </div>
+</div>
+<script>
+var T = {
+  TR: {
+    pageTitle:'NK BİLİM VE TEKNOLOJİ A.Ş.',
+    brandPrimary:'<span class="logo-nk">NK</span> BİLİM VE TEKNOLOJİ A.Ş.',
+    navAbout:'Hakkımızda', navBranch:'Şubelerimiz', navProducts:'Ürünlerimiz', navContact:'İletişim',
+    panelAboutLabel:'HAKKIMIZDA',
+    panelAboutBody:'<div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Kurucu ve CEO: Dr. Nihayet Koçyiğit</div><div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Kurulma Tarihi: 2026</div><div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Küresel çapta 4 ana stratejik şube ile faaliyet göstermekteyiz.</div>',
+    panelBranchLabel:'ŞUBELERİMİZ', panelProductsLabel:'ÜRÜNLERİMİZ', panelProductsBody:'<div style="margin-bottom:10px;">Teknoloji Portföy\u00fcm\u00fcz:</div><div style="color:#E1AD01; font-weight:700; margin-bottom:6px;">\u25CF Thermal Academy (Aktif)</div><div style="color:#E1AD01; font-weight:700; margin-bottom:6px;">\u25CF Success AI (Yakında)</div><div style="color:#E1AD01; font-weight:700;">\u25CF Hayalet Savunma Sistemleri (Yakında)</div>', panelContactLabel:'İLETİŞİM',
+    contactEmailLabel:'E-POSTA', contactPhoneLabel:'TELEFON',
+    contactPhoneValue:'+90 506 567 94 49',
+    branches:[
+      {name:'AMERİKA',sub:'Kuzey Amerika Şubesi'},
+      {name:'AVRUPA',sub:'Avrupa Şubesi'},
+      {name:'ASYA',sub:'Asya Şubesi'},
+      {name:'TÜRKİYE',sub:'Genel Merkez'}
+    ],
+    hubTurkiye:'TÜRKİYE', hubAvrupa:'AVRUPA', hubAsya:'ASYA', hubAmerika:'AMERİKA',
+    sectionDivider:'TEKNOLOJİ ÜRÜNLERİ',
+    card1Badge:'Aktif',
+    card1Subtitle:'AI Destekli Global İzolasyon Platformu<br>TS 825:2024 · ISO 6946 · ASTM C518 · DIN 4108',
+    card1ScoreLabel:'AI PERFORMANS<br>ALTIN SKOR',
+    moduleMALIYET:'MALİYET', moduleFINANS:'FİNANS',
+    ta1CalcTitle:'Hesaplama Modülleri', ta1StdTitle:'Desteklenen Standartlar',
+    ta1AccessLink:"Thermal Academy'ye Giriş →",
+    calcItems:['TÜLKE Seçimi','İKLİM Analizi','İZOLASYON Türü','Malzeme Kütüphanesi','MEKAN Hesabı','BOYUT Analizi','MALİYET Modülü','FİNANS Terminali'],
+    card1Btn:'VIP Erişim', card1BtnUnlocked:'✓ Erişim Açıldı',
+    card2Badge:'Yakında',
+    card2Subtitle:'AI Destekli Akademik Asistan<br>Tez Yazımı · Literatür Taraıması · Sunum',
+    card2Modules:['Tez Yazımı','Literatür','Sunum AI','Akademik Analiz'], card2Btn:'VIP Erişim',
+    card3Badge:'Yakında',
+    card3Subtitle:'Termal Görünmezlik Teknolojisi<br>Savunma Sanayi · Stratejik Çözümler',
+    card3Modules:['Termal İmza','İR Görünmezlik','Savunma','Stratejik'], card3Btn:'VIP Erişim',
+    modalThermalTitle:'Thermal Academy — VIP Erişim',
+    modalThermalDesc:'Thermal Academy platformuna erişmek için size özel VIP kodunuzu girin.',
+    modalSuccessTitle:'Success AI — VIP Erişim',
+    modalSuccessDesc:'Success AI akademik asistanına erişmek için VIP kodunuzu girin.',
+    modalShieldTitle:'Hayalet Savunma Sistemleri — VIP Erişim',
+    modalShieldDesc:'Hayalet Savunma Sistemleri platformuna erişmek için VIP kodunuzu girin.',
+    modalSubmitBtn:'ERİŞİMİ AÇ',
+    modalErrorText:'⚠ Geçersiz VIP kodu. Lütfen tekrar deneyin.',
+    footerText:'© 2026 NK BİLİM VE TEKNOLOJİ A.Ş. — TÜM HAKLAR SAKLIDIR',
+    brandSlogan:'Bilim ve teknolojinin kalbinin attığı yer'
+  },
+  EN: {
+    pageTitle:'NK SCIENCE & TECHNOLOGY CORP.',
+    brandPrimary:'<span class="logo-nk">NK</span> SCIENCE & TECHNOLOGY CORP.',
+    navAbout:'About Us', navBranch:'Our Branches', navProducts:'Our Products', navContact:'Contact',
+    panelAboutLabel:'ABOUT US',
+    panelAboutBody:'<div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Founder and CEO: Dr. Nihayet Koçyiğit</div><div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; Establishment Date: 2026</div><div style="color:#E1AD01; font-weight:700; margin-bottom:8px;">&#9679; We operate with 4 main strategic branches worldwide.</div>',
+    panelBranchLabel:'OUR BRANCHES', panelProductsLabel:'OUR PRODUCTS', panelProductsBody:'<div style="margin-bottom:10px;">Technology Portfolio:</div><div style="color:#E1AD01; font-weight:700; margin-bottom:6px;">\u25CF Thermal Academy (Live)</div><div style="color:#E1AD01; font-weight:700; margin-bottom:6px;">\u25CF Success AI (Coming Soon)</div><div style="color:#E1AD01; font-weight:700;">\u25CF Hayalet Savunma Sistemleri (Coming Soon)</div>', panelContactLabel:'CONTACT',
+    contactEmailLabel:'EMAIL', contactPhoneLabel:'PHONE',
+    contactPhoneValue:'+90 506 567 94 49',
+    branches:[
+      {name:'AMERICA',sub:'North America Branch'},
+      {name:'EUROPE',sub:'Europe Branch'},
+      {name:'ASIA',sub:'Asia Branch'},
+      {name:'TURKEY',sub:'Headquarters'}
+    ],
+    hubTurkiye:'TURKEY', hubAvrupa:'EUROPE', hubAsya:'ASIA', hubAmerika:'AMERICA',
+    sectionDivider:'TECHNOLOGY PRODUCTS',
+    card1Badge:'Live',
+    card1Subtitle:'AI-Powered Global Insulation Platform<br>TS 825:2024 · ISO 6946 · ASTM C518 · DIN 4108',
+    card1ScoreLabel:'AI PERFORMANCE<br>GOLD SCORE',
+    moduleMALIYET:'COST', moduleFINANS:'FINANCE',
+    ta1CalcTitle:'Calculation Modules', ta1StdTitle:'Supported Standards',
+    ta1AccessLink:'Enter Thermal Academy →',
+    calcItems:['COUNTRY Select','CLIMATE Analysis','INSULATION Type','Material Library','SPACE Calculation','DIMENSION Analysis','COST Module','FINANCE Terminal'],
+    card1Btn:'VIP ACCESS', card1BtnUnlocked:'✓ ACCESS GRANTED',
+    card2Badge:'Coming Soon',
+    card2Subtitle:'AI-Powered Academic Assistant<br>Thesis Writing · Literature Review · Presentations',
+    card2Modules:['Thesis Writing','Literature Review','Presentation AI','Academic Analysis'], card2Btn:'VIP ACCESS',
+    card3Badge:'Coming Soon',
+    card3Subtitle:'Thermal Invisibility Technology<br>Defense Industry · Strategic Solutions',
+    card3Modules:['Thermal Signature','IR Invisibility','Defense','Strategic'], card3Btn:'VIP ACCESS',
+    modalThermalTitle:'Thermal Academy — VIP Access',
+    modalThermalDesc:'Enter your exclusive VIP code to access the Thermal Academy platform.',
+    modalSuccessTitle:'Success AI — VIP Access',
+    modalSuccessDesc:'Enter your VIP code to access the Success AI academic assistant.',
+    modalShieldTitle:'Hayalet Savunma Sistemleri — VIP Access',
+    modalShieldDesc:'Enter your VIP code to access the Hayalet Savunma Sistemleri defense platform.',
+    modalSubmitBtn:'UNLOCK ACCESS',
+    modalErrorText:'⚠ Invalid VIP code. Please try again.',
+    footerText:'© 2026 NK SCIENCE & TECHNOLOGY CORP. — ALL RIGHTS RESERVED',
+    brandSlogan:'Where the heart of science and technology beats'
+  }
+};
+
+var VIP_CODES = {
+  'thermal2026':             {label:'Welcome — Admin Access'},
+  '3M-VIP-2026':             {label:'Welcome 3M Technical Team'},
+  'BASF-VIP-2026':           {label:'Welcome BASF Innovation Team'},
+  'SAINT-GOBAIN-VIP-2026':   {label:'Welcome Saint-Gobain Engineering Team'},
+  'KAJIMA-VIP-2026':         {label:'Welcome Kajima Technical Team'},
+  'OBAYASHI-VIP-2026':       {label:'Welcome Obayashi Engineering Team'},
+  'JOHNS-MANVILLE-VIP-2026': {label:'Welcome Johns Manville Technical Team'},
+  'AL-RASHID-VIP-2026':      {label:'Welcome Al-Rashid Group Technical Team'},
+  'RETAL-VIP-2026':          {label:'Welcome Retal Technical Evaluation Team'},
+  'ROSHN-VIP-2026':          {label:'Welcome ROSHN Project Engineering Team'},
+  'KNAUF-VIP-2026':          {label:'Welcome Knauf Insulation Technical Team'},
+  'DAIWA-VIP-2026':          {label:'Welcome Daiwa House Technical Team'}
+};
+
+var currentLang='TR', currentModalProduct=null, isThermalUnlocked=false, activePanel=null;
+
+function togglePanel(key) {
+  var map={about:{p:'panelAbout',b:'navAbout'},branch:{p:'panelBranch',b:'navBranch'},products:{p:'panelProducts',b:'navProducts'},contact:{p:'panelContact',b:'navContact'}};
+  Object.keys(map).forEach(function(k) {
+    if (k!==key) {
+      document.getElementById(map[k].p).classList.remove('open');
+      document.getElementById(map[k].b).classList.remove('active');
+      document.getElementById(map[k].b).setAttribute('aria-expanded','false');
+    }
+  });
+  var panel=document.getElementById(map[key].p), btn=document.getElementById(map[key].b);
+  var isOpen=panel.classList.contains('open');
+  if (isOpen) { panel.classList.remove('open'); btn.classList.remove('active'); btn.setAttribute('aria-expanded','false'); activePanel=null; }
+  else { buildBranchGrid(currentLang); panel.classList.add('open'); btn.classList.add('active'); btn.setAttribute('aria-expanded','true'); activePanel=key; }
+}
+
+var PIN_SVG_JS = '<svg viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 8.87 12 24 12 24s12-15.13 12-24C24 5.37 18.63 0 12 0z" fill="#E53935"/><circle cx="12" cy="12" r="4.5" fill="white"/></svg>';
+
+function buildBranchGrid(lang) {
+  var grid=document.getElementById('branchGrid');
+  grid.innerHTML=T[lang].branches.map(function(b) {
+    return '<div class="branch-card"><svg class="branch-pin-icon" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 8.87 12 24 12 24s12-15.13 12-24C24 5.37 18.63 0 12 0z" fill="#E53935"/><circle cx="12" cy="12" r="4.5" fill="white"/></svg><div><div class="branch-name">'+b.name+'</div><div class="branch-sub">'+b.sub+'</div></div></div>';
+  }).join('');
+}
+
+function setLang(lang) { if (lang===currentLang) return; currentLang=lang; applyLang(lang); }
+
+function applyLang(lang) {
+  var t=T[lang];
+  document.title=t.pageTitle;
+  document.documentElement.lang=lang.toLowerCase();
+  document.getElementById('brandPrimary').innerHTML=t.brandPrimary;
+  document.getElementById('navAbout').textContent=t.navAbout;
+  document.getElementById('navBranch').textContent=t.navBranch;
+  document.getElementById('navProducts').textContent=t.navProducts;
+  document.getElementById('navContact').textContent=t.navContact;
+  document.getElementById('panelAboutLabel').textContent=t.panelAboutLabel;
+  document.getElementById('panelAboutBody').innerHTML=t.panelAboutBody;
+  document.getElementById('panelBranchLabel').textContent=t.panelBranchLabel;
+  document.getElementById('panelProductsLabel').textContent=t.panelProductsLabel;
+  document.getElementById('panelProductsBody').innerHTML=t.panelProductsBody;
+  document.getElementById('panelContactLabel').textContent=t.panelContactLabel;
+  document.getElementById('contactEmailLabel').textContent=t.contactEmailLabel;
+  document.getElementById('contactPhoneLabel').textContent=t.contactPhoneLabel;
+  document.getElementById('contactPhoneValue').textContent=t.contactPhoneValue;
+  buildBranchGrid(lang);
+  document.getElementById('labelTurkiye').textContent=t.hubTurkiye;
+  document.getElementById('labelAvrupa').textContent=t.hubAvrupa;
+  document.getElementById('labelAsya').textContent=t.hubAsya;
+  document.getElementById('labelAmerika').textContent=t.hubAmerika;
+  document.getElementById('sectionDivider').textContent=t.sectionDivider;
+  document.getElementById('card1Badge').textContent=t.card1Badge;
+  document.getElementById('card1Subtitle').innerHTML=t.card1Subtitle;
+  document.getElementById('card1ScoreLabel').innerHTML=t.card1ScoreLabel;
+  document.getElementById('moduleMALIYET').textContent=t.moduleMALIYET;
+  document.getElementById('moduleFINANS').textContent=t.moduleFINANS;
+  document.getElementById('ta1CalcTitle').textContent=t.ta1CalcTitle;
+  document.getElementById('ta1StdTitle').textContent=t.ta1StdTitle;
+  document.getElementById('ta1AccessLink').textContent=t.ta1AccessLink;
+  document.getElementById('ta1CalcGrid').innerHTML=t.calcItems.map(function(item){return '<div class="calc-item"><div class="calc-dot"></div>'+item+'</div>';}).join('');
+  var btn1=document.getElementById('btnThermal');
+  btn1.textContent=btn1.disabled?t.card1BtnUnlocked:t.card1Btn;
+  document.getElementById('card2Badge').textContent=t.card2Badge;
+  document.getElementById('card2Subtitle').innerHTML=t.card2Subtitle;
+  document.getElementById('card2Modules').innerHTML=t.card2Modules.map(function(i){return '<span class="module-tag">'+i+'</span>';}).join('');
+  document.getElementById('btnSuccess').textContent=t.card2Btn;
+  document.getElementById('card3Badge').textContent=t.card3Badge;
+  document.getElementById('card3Subtitle').innerHTML=t.card3Subtitle;
+  document.getElementById('card3Modules').innerHTML=t.card3Modules.map(function(i){return '<span class="module-tag">'+i+'</span>';}).join('');
+  document.getElementById('btnShield').textContent=t.card3Btn;
+  document.getElementById('modalSubmitBtn').textContent=t.modalSubmitBtn;
+  document.getElementById('footerText').textContent=t.footerText;
+  document.querySelector('.brand-slogan').textContent=t.brandSlogan;
+  document.getElementById('btnLangTR').classList.toggle('lang-btn--active',lang==='TR');
+  document.getElementById('btnLangEN').classList.toggle('lang-btn--active',lang==='EN');
+}
+
+var MODAL_ICONS={thermal:'&#x1F321;&#xFE0F;',success:'&#x1F393;',shield:'&#x1F6E1;&#xFE0F;'};
+
+function openProductModal(product) {
+  currentModalProduct=product;
+  var t=T[currentLang], mk='modal'+product.charAt(0).toUpperCase()+product.slice(1);
+  document.getElementById('modalIcon').innerHTML=MODAL_ICONS[product]||'&#x1F510;';
+  document.getElementById('modalTitle').textContent=t[mk+'Title']||t.modalThermalTitle;
+  document.getElementById('modalDesc').textContent=t[mk+'Desc']||t.modalThermalDesc;
+  document.getElementById('modalSubmitBtn').textContent=t.modalSubmitBtn;
+  document.getElementById('vipInput').value='';
+  document.getElementById('modalError').style.display='none';
+  document.getElementById('welcomeBadge').style.display='none';
+  document.getElementById('vipModal').classList.add('active');
+  setTimeout(function(){document.getElementById('vipInput').focus();},80);
+}
+
+function closeModal(){document.getElementById('vipModal').classList.remove('active');currentModalProduct=null;}
+document.getElementById('vipModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+function submitVip() {
+  var raw=document.getElementById('vipInput').value.trim();
+  var matchKey=Object.keys(VIP_CODES).find(function(k){return k.toUpperCase()===raw.toUpperCase();});
+  if (!matchKey) {
+    var errEl=document.getElementById('modalError');
+    errEl.textContent=T[currentLang].modalErrorText; errEl.style.display='block';
+    document.getElementById('vipInput').style.borderColor='rgba(229,57,53,0.75)';
+    setTimeout(function(){errEl.style.display='none';document.getElementById('vipInput').style.borderColor='';},3200);
+    return;
+  }
+  var badge=document.getElementById('welcomeBadge');
+  badge.textContent=VIP_CODES[matchKey].label; badge.style.display='inline-block';
+  document.getElementById('modalError').style.display='none';
+  document.getElementById('vipInput').style.borderColor='';
+  var product=currentModalProduct;
+  setTimeout(function(){closeModal();if(product==='thermal')unlockThermal();},1200);
+}
+
+function unlockThermal() {
+  if (isThermalUnlocked) return;
+  isThermalUnlocked=true;
+  var panel=document.getElementById('taPanelCard');
+  panel.style.opacity='0'; panel.style.transition='opacity 0.45s ease';
+  panel.classList.add('show');
+  requestAnimationFrame(function(){requestAnimationFrame(function(){panel.style.opacity='1';});});
+  var btn=document.getElementById('btnThermal');
+  btn.textContent=T[currentLang].card1BtnUnlocked; btn.disabled=true; btn.style.opacity='0.52';
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function drawArcs() {
+  var wrapper=document.getElementById('mapWrapper'), svg=document.getElementById('arcsSvg');
+  if (!wrapper||!svg) return;
+  var rect=wrapper.getBoundingClientRect(), W=rect.width, H=rect.height;
+  if (W<10||H<10) return;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.innerHTML='';
+  function pinPt(cls) {
+    var el=wrapper.querySelector(cls); if (!el) return {x:W/2,y:H/2};
+    var r=el.getBoundingClientRect(), wr=wrapper.getBoundingClientRect();
+    return {x:r.left+r.width/2-wr.left, y:r.bottom-wr.top};
+  }
+  var TR=pinPt('.hub--turkiye'),EU=pinPt('.hub--avrupa'),AS=pinPt('.hub--asya'),AM=pinPt('.hub--amerika');
+  function arc(a,b) {
+    var mx=(a.x+b.x)/2, my=(a.y+b.y)/2, dx=b.x-a.x, cpy=my-Math.abs(dx)*0.18;
+    var p=document.createElementNS('http://www.w3.org/2000/svg','path');
+    p.setAttribute('d','M '+a.x+','+a.y+' Q '+mx+','+cpy+' '+b.x+','+b.y);
+    p.setAttribute('class','arc-path'); svg.appendChild(p);
+  }
+  arc(TR,EU); arc(TR,AS); arc(TR,AM);
+}
+
+document.addEventListener('click',function(e){
+  var hdr=document.getElementById('siteHeader');
+  if (hdr&&!hdr.contains(e.target)&&activePanel) togglePanel(activePanel);
+});
+
+(function init(){
+  buildBranchGrid('TR');
+  document.getElementById('ta1CalcGrid').innerHTML=T.TR.calcItems.map(function(item){
+    return '<div class="calc-item"><div class="calc-dot"></div>'+item+'</div>';
+  }).join('');
+})();
+
+window.addEventListener('load',function(){setTimeout(drawArcs,150);});
+window.addEventListener('resize',function(){setTimeout(drawArcs,60);});
+// ===== LIVE CLOCK =====
+(function startClock() {
+  var DAYS = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  var MONTHS = {
+    TR: ['OCAK','ŞUBAT','MART','NİSAN','MAYIS','HAZİRAN','TEMMUZ','AĞUSTOS','EYLÜL','EKİM','KASIM','ARALIK'],
+    EN: ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER']
+  };
+  function tick() {
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2,'0');
+    var m = String(now.getMinutes()).padStart(2,'0');
+    var s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clockTime').textContent = h+':'+m+':'+s;
+    var lang = (typeof currentLang !== 'undefined') ? currentLang : 'TR';
+    var months = MONTHS[lang] || MONTHS['TR'];
+    var dateStr = String(now.getDate()).padStart(2,'0')+' '+months[now.getMonth()]+' '+now.getFullYear();
+    document.getElementById('clockDate').textContent = dateStr;
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>
